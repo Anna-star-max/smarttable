@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: smarttable
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: MINIMAX_API_KEY
+        sync: false
+      - key: MINIMAX_BASE_URL
+        value: https://api.minimaxi.com/anthropic
+      - key: MINIMAX_MODEL
+        value: MINIMAX-M2.7
+      - key: PYTHON_VERSION
+        value: 3.11
