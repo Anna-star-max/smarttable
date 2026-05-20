@@ -132,12 +132,15 @@ async def upload_file(file: UploadFile = File(...)):
         import io
         content = await file.read()
         text_parts = []
-        with pdfplumber.open(io.BytesIO(content)) as pdf:
-            for page in pdf.pages:
-                page_text = page.extract_text()
-                if page_text:
-                    text_parts.append(page_text)
-        text = "\n".join(text_parts)
+        try:
+            with pdfplumber.open(io.BytesIO(content)) as pdf:
+                for page in pdf.pages:
+                    page_text = page.extract_text()
+                    if page_text:
+                        text_parts.append(page_text)
+            text = "\n".join(text_parts)
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"PDF 解析失敗：{str(e)}")
     elif ext in ["xlsx", "xls"]:
         import pandas as pd
         import io
